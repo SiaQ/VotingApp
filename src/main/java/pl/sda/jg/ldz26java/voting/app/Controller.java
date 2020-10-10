@@ -7,6 +7,8 @@ import java.util.List;
 @RestController
 public class Controller {
 
+    public static final VoteDAO VOTE_DAO = new VoteDAO();
+
     @GetMapping("/test")
     public String test() {
         return "Hello!";
@@ -14,8 +16,7 @@ public class Controller {
 
     @PostMapping("/load")
     public String loadDatabase() {
-        final VoteDAO voteDAO = new VoteDAO();
-        voteDAO.loadDatabase();
+        VOTE_DAO.loadDatabase();
         return "Loaded";
     }
 
@@ -24,25 +25,21 @@ public class Controller {
             @RequestParam("projectId") Long projectId,
             @RequestParam("voterId") Long voterId,
             @RequestParam("vote") String vote) {
-        final VoteDAO voteDAO = new VoteDAO();
-        return voteDAO.voteForProject(projectId, voterId, vote);
+        return VOTE_DAO.voteForProject(projectId, voterId, vote);
     }
 
     @PutMapping("/closeVoting")
     public String closeVoting(@RequestParam("projectId") Long projectId) {
-        final VoteDAO voteDAO = new VoteDAO();
-        return voteDAO.closeVoting(projectId);
+        return VOTE_DAO.closeVoting(projectId);
     }
 
     @GetMapping("/projectDetails")
     public ProjectDetails projectDetails(@RequestParam("projectId") Long projectId) {
-        final VoteDAO voteDAO = new VoteDAO();
-        return voteDAO.projectDetails(projectId);
+        return VOTE_DAO.projectDetails(projectId);
     }
 
     @GetMapping("/getProjectsList")
     public List<Project> returnProjectsList() {
-        final VoteDAO voteDAO = new VoteDAO();
-        return voteDAO.projectsList();
+        return VOTE_DAO.projectsList();
     }
 }
