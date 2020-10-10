@@ -2,6 +2,8 @@ package pl.sda.jg.ldz26java.voting.app;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class Controller {
 
@@ -36,5 +38,11 @@ public class Controller {
     public ProjectDetails projectDetails(@RequestParam("projectId") Long projectId) {
         final VoteDAO voteDAO = new VoteDAO();
         return voteDAO.projectDetails(projectId);
+    }
+
+    @GetMapping("/getProjectsList")
+    public List<Project> returnProjectsList() {
+        final VoteDAO voteDAO = new VoteDAO();
+        return voteDAO.projectsList();
     }
 }

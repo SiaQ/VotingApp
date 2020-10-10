@@ -59,15 +59,16 @@ public class VoteDAO {
         final boolean isVoterPresent = isSuchVoterPresent(voterId, entityManager);
 
         boolean voted = false;
-        boolean voteOpen = isVoteOpen(projectId, entityManager);
+        boolean voteOpen = false;
 
         if (isProjectPresent && isVoterPresent) {
+            voteOpen = isVoteOpen(projectId, entityManager);
             voted = hasVoted(projectId, voterId, entityManager);
         }
 
-        if(!isProjectPresent) {
+        if (!isProjectPresent) {
             return "There's no such project on projects list!";
-        } else if(!isVoterPresent) {
+        } else if (!isVoterPresent) {
             return "Wrong voter id!";
         } else if (!voteOpen) {
             return "Voting for that project has been closed!";
@@ -138,7 +139,7 @@ public class VoteDAO {
 
         entityManager.getTransaction().begin();
         final Project project = entityManager.find(Project.class, projectId);
-        if(!project.isVoteOpen()) {
+        if (!project.isVoteOpen()) {
             return "Project has been closed sometime ago";
         } else {
             project.setVoteOpen(false);
@@ -157,5 +158,14 @@ public class VoteDAO {
                         "JOIN Project p " +
                         "ON p.id = v.projectId " +
                         "WHERE v.projectId = :projectId", ProjectDetails.class).setParameter("projectId", projectId).getSingleResult();
+    }
+
+    public List<Project> projectsList() {
+        final EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+
+        return entityManager.createQuery(
+                "SELECT p " +
+                        "FROM Project p " +
+                        "ORDER BY p.name", Project.class).getResultList();
     }
 }
